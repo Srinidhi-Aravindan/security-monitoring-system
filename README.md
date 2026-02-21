@@ -16,3 +16,9 @@ A lightweight Python‑based security monitoring system that performs **log pars
 ## Features
 - Parse authentication logs (login failed/success, privilege escalation)
 [...etc]
+
+## Technologies
+- Python 3.9+
+- Regular expressions
+- SHA256 hashing
+- JSON configuration
