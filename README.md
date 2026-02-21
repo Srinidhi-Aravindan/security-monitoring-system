@@ -22,3 +22,7 @@ A lightweight Python‑based security monitoring system that performs **log pars
 - Regular expressions
 - SHA256 hashing
 - JSON configuration
+
+## Quick Start
+```bash
+python main.py
