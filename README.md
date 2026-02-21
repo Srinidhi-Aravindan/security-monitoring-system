@@ -9,14 +9,6 @@ A lightweight Python‑based security monitoring system that performs **log pars
 - JSON config for rules
 - CLI interface
 
-# Security Monitoring System (Python)
-
-A lightweight Python‑based security monitoring system that performs **log parsing**, **rule‑based anomaly detection**, and **file integrity monitoring**.
-
-## Features
-- Parse authentication logs (login failed/success, privilege escalation)
-[...etc]
-
 ## Technologies
 - Python 3.9+
 - Regular expressions
@@ -26,6 +18,7 @@ A lightweight Python‑based security monitoring system that performs **log pars
 ## Quick Start
 ```bash
 python main.py
+```
 
 ## Sample Output
 
