@@ -1,2 +1,3 @@
-# security-monitoring-system
-Python-based security monitoring tool for log analysis, anomaly detection, and file integrity verification.
+# Security Monitoring System (Python)
+
+A lightweight Python‑based security monitoring system that performs **log parsing**, **rule‑based anomaly detection**, and **file integrity monitoring**.
