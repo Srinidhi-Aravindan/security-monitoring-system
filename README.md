@@ -26,3 +26,12 @@ A lightweight Python‑based security monitoring system that performs **log pars
 ## Quick Start
 ```bash
 python main.py
+
+## Sample Output
+
+```
+Anomalies detected:
+{
+"192.168.1.100": 2
+}
+```
