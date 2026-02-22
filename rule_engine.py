@@ -1,7 +1,12 @@
-def check_failed_logins(logs, threshold=2):
-    ip_fails = {}
+def check_failed_logins(logs, threshold):
+    failed_by_ip = {}
     for log in logs:
-        if log and log['event'] == 'login_failed':
+        if log and log['status'] == 'failed':
             ip = log['ip']
-            ip_fails[ip] = ip_fails.get(ip, 0) + 1
-    return {ip: count for ip, count in ip_fails.items() if count >= threshold}
+            failed_by_ip[ip] = failed_by_ip.get(ip, 0) + 1
+            print(f"DEBUG: {ip} → {failed_by_ip[ip]} fails")  # ← ADD THIS
+    
+    # Apply threshold
+    anomalies = {ip: count for ip, count in failed_by_ip.items() if count >= threshold}
+    print(f"DEBUG: Threshold {threshold}, anomalies: {anomalies}")  # ← ADD THIS
+    return anomalies
