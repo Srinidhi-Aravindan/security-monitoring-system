@@ -20,8 +20,12 @@ A lightweight Python‑based security monitoring system that performs **log pars
 python main.py
 ```
 
-## Sample Output
+## Live Demo
 
-```
-![alt text](image.png)
-```
+**Real brute-force detection across 20 SSH logs:**
+
+<img width="343" height="160" alt="image" src="https://github.com/user-attachments/assets/4f43a8da-d74e-443e-b03e-a3a1ed719562" />
+
+**4 attackers identified** (threshold: 2+ failed logins):
+- `192.168.1.100`: **3 attempts** (high risk)
+- `10.0.0.99`, `10.0.0.50`, `192.168.1.200`: **2 attempts each**
