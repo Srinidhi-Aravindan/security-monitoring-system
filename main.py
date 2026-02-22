@@ -11,10 +11,9 @@ def main():
     
     with open('sample_logs.txt', 'r') as f:
         logs_text = f.readlines()
-    
-    logs = [parse_log(line.strip()) for line in logs_text]
-    anomalies = check_failed_logins(logs, config['rules']['failed_logins'])
-    
+    threshold = config['rules']['failed_logins']
+    parsed = [parse_log(line.strip()) for line in logs_text]
+    anomalies = check_failed_logins(parsed, threshold)
     print("Anomalies detected (threshold:", config['rules']['failed_logins'], "):")
     print(json.dumps(anomalies, indent=2))
 

@@ -1,14 +1,14 @@
+from ast import pattern
 import re
-from datetime import datetime
 
-def parse_log(line):
-    pattern = r'(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}) (\w+) (\w+) ([\d.]+)'
-    match = re.match(pattern, line)
+def parse_log(log_line):
+    pattern = r'(\w{3} \d{1,2} \d{2}:\d{2}:\d{2}) (\S+) sshd\[\d+\]: (Accepted|Failed) password .* from (\S+)'
+    match = re.search(pattern, log_line)
+    
     if match:
         return {
-            'timestamp': datetime.strptime(match.group(1), '%Y-%m-%d %H:%M:%S'),
-            'event': match.group(2),
-            'user': match.group(3),
-            'ip': match.group(4)
+            'timestamp': match.group(1),
+            'ip': match.group(4),      # IP at end
+            'status': match.group(3).lower()
         }
     return None
