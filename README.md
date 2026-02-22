@@ -23,8 +23,5 @@ python main.py
 ## Sample Output
 
 ```
-Anomalies detected:
-{
-"192.168.1.100": 2
-}
+![alt text](image.png)
 ```
