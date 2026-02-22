@@ -8,6 +8,5 @@ def check_failed_logins(logs, threshold):
     
     # Apply threshold
     anomalies = {ip: count for ip, count in failed_by_ip.items() if count >= threshold}
-    print({anomalies})
     print(f"DEBUG: Threshold {threshold}, anomalies: {anomalies}")
     return anomalies
