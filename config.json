@@ -1,5 +1,9 @@
 {
   "rules": {
-    "failed_logins": 2
+    "failed_login_threshold": 2,
+    "time_window_seconds": 120
+  },
+  "timezone": {
+    "offset_hours": 5.5
   }
 }
