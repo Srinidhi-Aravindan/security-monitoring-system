@@ -30,7 +30,7 @@ pip install -r requirements.txt  # None needed!
 python main.py
 ```
 
-**Key Features:**
+## 📈 Key Features:
 ✅ "Production SIEM" ← Enterprise positioning
 ✅ Lists YOUR actual features (multi‑format, timezone_table)
 ✅ Demo screenshot context
@@ -38,7 +38,7 @@ python main.py
 ✅ Clean tech list (no fluff)
 ✅ Quick start instructions
 
-**config.json timezone_table:**
+## config.json timezone_table:
 ```json
 {
   "IST": "+05:30", "MYT": "+08:00", "SGT": "+08:00", 
