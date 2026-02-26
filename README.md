@@ -20,12 +20,21 @@ A lightweight Python‑based security monitoring system that performs **log pars
 python main.py
 ```
 
-## Live Demo
+## Production Demo
 
-**Real brute-force detection across 20 SSH logs:**
+**Multi‑format SIEM: SSH syslog + CSV/ISO → 16 events analyzed**
 
-<img width="343" height="160" alt="image" src="https://github.com/user-attachments/assets/4f43a8da-d74e-443e-b03e-a3a1ed719562" />
+<img src="image.png" alt="Production SIEM Output" width="600">
 
-**4 attackers identified** (threshold: 2+ failed logins):
-- `192.168.1.100`: **3 attempts** (high risk)
-- `10.0.0.99`, `10.0.0.50`, `192.168.1.200`: **2 attempts each**
+**Key Features:**
+- **Universal parsing**: SSH syslog + CSV/ISO formats
+- **Timezone‑aware**: IST/MYT/SGT/PST via `config.json` timezone_table
+- **Config‑driven**: threshold/window from JSON rules
+- **Multi‑source**: Combines all log files automatically
+
+**config.json timezone_table:**
+```json
+{
+  "IST": "+05:30", "MYT": "+08:00", "SGT": "+08:00", 
+  "PST": "-08:00", "UTC": "+00:00", "CET": "+01:00"
+}
