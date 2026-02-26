@@ -1,67 +1,82 @@
 """
 Security Monitoring System - Advanced Brute-Force Detection
-Supports multi-timezone logs with configurable analysis window.
+Srinidhi Aravindan | JHU Cybersecurity Portfolio | Feb 2026
+Supports config.json timezone_table + default_timezone
 """
 
 from collections import defaultdict
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
 import re
 
 
-def detect_bruteforce(events, threshold=2, window_seconds=300, timezone_offset_hours=0):
+def resolve_timestamp(timestamp_str, timezone_table, default_timezone="+05:30"):
     """
-    Detect brute-force attacks within sliding time window.
+    Normalizes timestamp to UTC using config.json timezone_table.
+    """
+    s = timestamp_str.strip()
     
-    Args:
-        events: List of parsed log events
-        threshold: Min failed logins to alert (default: 2)
-        window_seconds: Time window for attack detection (default: 5min)
-        timezone_offset_hours: Log timezone offset from UTC (e.g., +5.5 for IST)
+    # 1) ISO with offset: "2026-02-23T22:10:00+05:30"
+    iso_match = re.match(r'(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})([+-]\d{2}:\d{2})', s)
+    if iso_match:
+        base, offset_str = iso_match.groups()
+        dt = datetime.fromisoformat(base)
+        sign = 1 if offset_str[0] == '+' else -1
+        hours, minutes = map(int, offset_str[1:].split(':'))
+        delta = timedelta(hours=sign * hours, minutes=sign * minutes)
+        return dt + delta
     
-    Returns:
-        dict: {ip: attack_count}
+    # 2) Syslog + TZ name: "Feb 23 22:10:00 IST"
+    name_match = re.match(r'^(\w{3} \d{1,2} \d{2}:\d{2}:\d{2})\s+(\w+)$', s)
+    if name_match:
+        base, tz_name = name_match.groups()
+        dt = datetime.strptime(base, "%b %d %H:%M:%S").replace(year=datetime.now().year)
+        offset_str = timezone_table.get(tz_name.upper(), default_timezone)
+    else:
+        # 3) Plain syslog: use default
+        try:
+            dt = datetime.strptime(s, "%b %d %H:%M:%S").replace(year=datetime.now().year)
+        except ValueError:
+            return datetime.utcnow()
+        offset_str = default_timezone
+    
+    # Apply offset like "+05:30"
+    sign = 1 if offset_str[0] == '+' else -1
+    hours, minutes = map(int, offset_str[1:].split(':'))
+    delta = timedelta(hours=sign * hours, minutes=sign * minutes)
+    return dt + delta
+
+
+def detect_bruteforce(events, threshold=2, window_seconds=300, 
+                      timezone_table={}, default_timezone="+05:30"):
+    """
+    Detect brute-force using pre-normalized UTC timestamps or resolves from config.
     """
     failed_attempts = defaultdict(list)
-    
-    # Convert to UTC for consistent analysis
-    tz_offset = timedelta(hours=timezone_offset_hours)
     
     for event in events:
         if not event or event.get("status") != "failed":
             continue
             
-        try:
-            # Parse flexible timestamp formats
-            timestamp_str = event["timestamp"]
-            # Handle "Feb 23 22:10:00" or "Feb 23 22:10:00 +0530"
-            ts_match = re.match(r'(\w{3} \d{1,2} \d{2}:\d{2}:\d{2})(?:\s+([+-]\d{4}))?', timestamp_str)
-            
-            if ts_match:
-                ts_local = datetime.strptime(ts_match.group(1), "%b %d %H:%M:%S")
-                # Assume log year = current year
-                ts_local = ts_local.replace(year=datetime.now().year)
-                
-                # Apply timezone offset to get UTC
-                ts_utc = ts_local + tz_offset
-                failed_attempts[event["ip"]].append(ts_utc)
-                
-        except (ValueError, KeyError):
-            continue  # Skip unparseable events
+        # Use pre-resolved UTC if available, otherwise resolve now
+        if "timestamp_utc" in event:
+            ts_utc = event["timestamp_utc"]
+        else:
+            ts_utc = resolve_timestamp(event["timestamp"], timezone_table, default_timezone)
+        
+        failed_attempts[event["ip"]].append(ts_utc)
     
-    # Sliding window analysis
+    # Sliding window analysis (UTC timeline)
     alerts = {}
     for ip, timestamps in failed_attempts.items():
         if len(timestamps) < threshold:
             continue
             
         timestamps.sort()
-        window_end = timestamps[-1]  # Most recent attack
+        window_end = timestamps[-1]
         window_start = window_end - timedelta(seconds=window_seconds)
+        recent_count = sum(1 for ts in timestamps if window_start <= ts <= window_end)
         
-        # Count attacks in window
-        recent_attacks = [ts for ts in timestamps if window_start <= ts <= window_end]
-        
-        if len(recent_attacks) >= threshold:
-            alerts[ip] = len(recent_attacks)
+        if recent_count >= threshold:
+            alerts[ip] = recent_count
     
     return alerts

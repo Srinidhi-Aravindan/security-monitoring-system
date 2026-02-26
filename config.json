@@ -3,7 +3,13 @@
     "failed_login_threshold": 2,
     "time_window_seconds": 120
   },
-  "timezone": {
-    "offset_hours": 5.5
+  "default_timezone": "+05:30",
+  "timezone_table": {
+    "IST": "+05:30",
+    "MYT": "+08:00",
+    "SGT": "+08:00",
+    "PST": "-08:00",
+    "UTC": "+00:00",
+    "CET": "+01:00"
   }
 }

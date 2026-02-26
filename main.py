@@ -1,41 +1,53 @@
+#!/usr/bin/env python3
+"""
+Production SIEM using config.json timezone_table
+"""
+
 import json
 from parser import parse_log
 from rule_engine import detect_bruteforce
 
 
 def main():
-    # Load configuration
+    # Load your config
     with open("config.json", "r") as f:
         config = json.load(f)
 
     rules = config["rules"]
-    threshold = rules["failed_login_threshold"]
-    window_seconds = rules.get("time_window_seconds", 300)
+    tz_table = config.get("timezone_table", {})
+    default_tz = config["default_timezone"]
 
-    # Load and parse logs
-    with open("sample_logs.txt", "r") as f:
-        logs_text = f.readlines()
+    print(f"🔍 Config: threshold={rules['failed_login_threshold']} window={rules['time_window_seconds']}s")
+    print(f"🌍 TZ: default={default_tz} table={list(tz_table.keys())}")
 
-    events = [parse_log(line.strip()) for line in logs_text]
+    # Multi-source
+    log_sources = ["sample_logs.txt", "csv_auth_logs.txt"]
+    all_events = []
+    
+    for filename in log_sources:
+        print(f"\n📂 {filename}")
+        try:
+            with open(filename, "r") as f:
+                lines = f.readlines()
+            events = [parse_log(line.strip()) for line in lines if line.strip()]
+            valid_events = [e for e in events if e]
+            all_events.extend(valid_events)
+            print(f"  ✓ {len(valid_events)} events")
+        except FileNotFoundError:
+            print("  ⚠ skipped")
 
-    # DEBUG: Uncomment to verify parsing
-    """
-    failed_events = [e for e in events if e and e["status"] == "failed"]
-    print(f"DEBUG: {len(failed_events)} failed events parsed:")
-    for e in failed_events[:5]:
-        print(f"  {e['ip']} @ {e['timestamp']}")
-    """
+    print(f"\n📊 {len(all_events)} total events")
 
-    # Timezone-aware brute-force detection
+    # Detection using your config.json timezone_table
     anomalies = detect_bruteforce(
-        events,
-        threshold=threshold,
-        window_seconds=window_seconds,
-        timezone_offset_hours=5.5  # IST (UTC+5.5)
+        all_events,
+        threshold=rules["failed_login_threshold"],
+        window_seconds=rules["time_window_seconds"],
+        timezone_table=tz_table,
+        default_timezone=default_tz
     )
 
-    # Production output
-    print(f"Anomalies detected (threshold: {threshold}, window: {window_seconds}s IST):")
+    print(f"\n🚨 Brute-force alerts:")
     print(json.dumps(anomalies, indent=2))
 
 
