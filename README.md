@@ -31,12 +31,12 @@ python main.py
 ```
 
 ## 📈 Key Features:
-✅ "Production SIEM" ← Enterprise positioning
-✅ Lists YOUR actual features (multi‑format, timezone_table)
-✅ Demo screenshot context
-✅ No "file integrity" (you don't have it yet)
-✅ Clean tech list (no fluff)
-✅ Quick start instructions
+- ✅ "Production SIEM" ← Enterprise positioning
+- ✅ Lists YOUR actual features (multi‑format, timezone_table)
+- ✅ Demo screenshot context
+- ✅ No "file integrity" (you don't have it yet)
+- ✅ Clean tech list (no fluff)
+- ✅ Quick start instructions
 
 ## config.json timezone_table:
 ```json
