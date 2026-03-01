@@ -30,12 +30,11 @@ python main.py
 ```
 
 ## 📈 Key Features:
-✅ "Production SIEM" ← Enterprise positioning  
-✅ Lists YOUR actual features (multi‑format, timezone_table)  
-✅ Demo screenshot context  
-✅ No "file integrity" (you don't have it yet)  
-✅ Clean tech list (no fluff)  
-✅ Quick start instructions  
+✅ Auth log parsing (failed/success, sudo)
+✅ Brute-force detection by IP (2+ failures)
+✅ SHA256 file integrity checks
+✅ JSON-based rules and settings
+✅ Minimal CLI tool, no external deps 
 
 ## config.json timezone_table:
 ```json
