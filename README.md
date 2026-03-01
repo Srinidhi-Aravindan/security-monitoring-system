@@ -30,11 +30,11 @@ python main.py
 ```
 
 ## 📈 Key Features:
-✅ Auth log parsing (failed/success, sudo)
-✅ Brute-force detection by IP (2+ failures)
-✅ SHA256 file integrity checks
-✅ JSON-based rules and settings
-✅ Minimal CLI tool, no external deps 
+✅ Auth log parsing (failed/success, sudo)  
+✅ Brute-force detection by IP (2+ failures)  
+✅ SHA256 file integrity checks  
+✅ JSON-based rules and settings  
+✅ Minimal CLI tool, no external deps  
 
 ## config.json timezone_table:
 ```json
