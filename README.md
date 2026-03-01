@@ -26,7 +26,6 @@
 
 ## 🚀 Quick Start
 ```bash
-pip install -r requirements.txt  # None needed!
 python main.py
 ```
 
